@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="bulma.min.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"> </script>
+	</head>
+	<body>
+		<section class="section">
+			<div class="maincolumns columns is-desktop is-vcentered">
+				<div class="column is-10 is-offset-1 notification is-info is-light box container">
+					<div class="title">
+						Restaurants
+					</div>
+					<% if (locals.allRestaurants) { %>
+						<div class="table-container">
+						<table class="table is-bordered is-hoverable is-striped is-narrow">
+							<thead>
+							<tr>
+								<th> name </th>
+								<th> description</th>
+								<th> &nbsp;</th>
+								<th> &nbsp; </th>
+							</tr>
+							</thead>
+							<% let i=0; %>
+							<% for(i=0; i < allRestaurants.length; i++) { %>
+							<tr>
+								<td>
+									<a href=<%= `showReviews?id=${allRestaurants[i].restaurant_id}` %>>
+										<%= allRestaurants[i].name %>
+									</a>
+								</td>
+								<td><%= allRestaurants[i].description %></td>
+								<td>
+									<form action="deleteRestaurant" method="POST">
+										<input hidden name="restaurant_id" value=<%- allRestaurants[i].restaurant_id %> >
+										<button><i class="fas fa-trash"></i></button>
+									</form>
+								</td>
+								<td><i class="fas fa-star"></i></td>
+							</tr>
+							<% } %>
+							<tfoot>
+								<tr> <td colspan="4">
+								There are <%= i %> restaurants.
+								</td> </tr>
+							</tfoot>
+						</table>
+						</div>
+					<% } %>
+
+					<form action="addRestaurant" method="post">
+						<div class="field is-horizontal">
+						  <div class="field-label is-normal">
+							<label class="label">Add New Restaurant</label>
+						  </div>
+						  <div class="field-body">
+							<div class="field">
+							  <p class="control is-expanded">
+								<input name="name" class="input" type="text" placeholder="Restaurant Name">
+							  </p>
+							</div>
+							<div class="field">
+							  <p class="control is-expanded">
+								<input name="description" class="input" type="text" placeholder="Description">
+							  </p>
+							</div>							
+							<div class="field">
+								<button class="button is-link">
+									<span>Add</span>
+									<span class="icon is-small">
+										<i class="fas fa-user-plus"></i>
+									</span>
+								</button>
+							</div>
+						  </div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>
