@@ -51,7 +51,7 @@ function deletePersonSkill(personId, callback) {
 }
  
 function deleteRestaurant(restaurant_id, callback) {
-	let sqlDeletePerson = "DELETE FROM restaurant where restaurant_id = :restaurantId";
+	let sqlDeletePerson = "DELETE restaurant FROM restaurant JOIN review ON restaurant.restaurant_id = review.restaurant_id WHERE restaurant.restaurant_id = :restaurantId";
 	console.log("restaurant_id:", restaurant_id)
 	let params = {
 		restaurantId: restaurant_id
@@ -69,9 +69,9 @@ function deleteRestaurant(restaurant_id, callback) {
 }
 
 function getReview(restaurantId, cb) {
-	let sqlRestaurant = "SELECT restaurant.name, review.details, review.reviewer_name, review.rating WHERE restaurant_id = :restaurantId JOIN review ON restaurant.restaurant_id = review.restaurant_id "
+	let sqlRestaurant = "SELECT restaurant.restaurant_id, restaurant.name, review.review_id, review.details, review.reviewer_name, review.rating FROM restaurant LEFT JOIN review ON restaurant.restaurant_id = review.restaurant_id WHERE restaurant.restaurant_id = :restaurantId;"
 	let params = {
-		restaurantId: restaurant_id
+		restaurantId: restaurantId
 	};
 	database.query(sqlRestaurant, params, (err, results) => {
 		if (err) cb(err, null)
@@ -82,4 +82,42 @@ function getReview(restaurantId, cb) {
 	})
 }
 
-module.exports = {getAllRestaurants, addRestaurant, deleteRestaurant, deletePersonSkill}
+function addReview(postData, callback) {
+	let sqlInsert = "INSERT INTO review (restaurant_id, reviewer_name, details, rating) VALUES (:restaurant_id, :reviewer_name, :details, :rating);";
+	let params = {	
+			restaurant_id: postData.restaurant_id,
+			reviewer_name: postData.reviewer_name,
+			details: postData.details,
+			rating: postData.rating
+		};
+	console.log(sqlInsert);
+	database.query(sqlInsert, params, (err, results, fields) => {
+		if (err) {
+			console.log(err);
+			callback(err, null);
+		}
+		else {
+			console.log(results);
+			callback(null, results);
+		}
+	});
+}
+
+function deleteReview(reviewId, callback) {
+	let sqlDeleteReview = "DELETE FROM review where review_id = :reviewId";
+	let params = {
+		reviewId: reviewId
+	};
+	console.log(sqlDeleteReview);
+	database.query(sqlDeleteReview, params, (err, results, fields) => {
+		if (err) {
+			callback(err, null);
+		}
+		else {
+			console.log(results);
+			callback(null, results);
+		}		
+	});	
+}
+
+module.exports = {getAllRestaurants, addRestaurant, deleteRestaurant, deletePersonSkill, getReview, addReview, deleteReview}
