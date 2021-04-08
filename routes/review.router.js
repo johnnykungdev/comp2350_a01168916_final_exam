@@ -23,6 +23,7 @@ router.get('/showReviews', (req, res) => {
 				else { //success
                     console.log(result)
                     let review = null
+                    if (!result[0]) return res.redirect('/')
                     if (result[0].review_id) review = result
                     console.log(Boolean(result[0].review_id))
                     console.log(review)
