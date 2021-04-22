@@ -3,7 +3,7 @@ const database = include('/databaseConnection');
 const passwordPepper = "SeCretPeppa4MySal+";
 
 function getRecipes(callback) {
-	let sqlQuery = "SELECT recipe.name, recipe.description, recipe.cook_time, COUNT(ingredient.recipe_id) AS 'ingredient_num' FROM ingredient RIGHT JOIN recipe ON ingredient.recipe_id = recipe.recipe_id GROUP BY recipe.recipe_id;";
+	let sqlQuery = "SELECT recipe.recipe_id, recipe.name, recipe.description, recipe.cook_time, COUNT(ingredient.recipe_id) AS 'ingredient_num' FROM ingredient RIGHT JOIN recipe ON ingredient.recipe_id = recipe.recipe_id GROUP BY recipe.recipe_id;";
 	database.query(sqlQuery, (err, results, fields) => {
 		if (err) {
 			callback(err, null);
@@ -101,28 +101,6 @@ function getIngredients(recipe_id, cb) {
 	})
 }
 
-function addReview(postData, callback) {
-	let sqlInsert = "INSERT INTO review (restaurant_id, reviewer_name, details, rating) VALUES (:restaurant_id, :reviewer_name, :details, :rating);";
-	let params = {	
-			restaurant_id: postData.restaurant_id,
-			reviewer_name: postData.reviewer_name,
-			details: postData.details,
-			rating: postData.rating
-		};
-
-	console.log(sqlInsert);
-	database.query(sqlInsert, params, (err, results, fields) => {
-		if (err) {
-			console.log(err);
-			callback(err, null);
-		}
-		else {
-			console.log(results);
-			callback(null, results);
-		}
-	});
-}
-
 function deleteIngredient(ingredient_id, callback) {
 	let sqlDeleteReview = "DELETE FROM ingredient where ingredient_id = :ingredientId";
 	let params = {
@@ -140,4 +118,25 @@ function deleteIngredient(ingredient_id, callback) {
 	});	
 }
 
-module.exports = {getRecipes, addRecipe, deleteRecipe, deletePersonSkill, getIngredients, addReview, deleteIngredient, getRecipeById}
+function addIngredient(postData, callback) {
+	let sqlInsert = "INSERT INTO recipe (name, description, cook_time, recipe_id) VALUES (:name, :description, :cookTime, :recipeId);";
+	let params = {	
+			recipeId: postData.recipe_id,
+			name: postData.name,
+			description: postData.description,
+			cookTime: postData.cook_time
+		};
+	console.log(sqlInsert);
+	database.query(sqlInsert, params, (err, results, fields) => {
+		if (err) {
+			console.log(err);
+			callback(err, null);
+		}
+		else {
+			console.log(results);
+			callback(null, results);
+		}
+	});
+}
+
+module.exports = {getRecipes, addRecipe, deleteRecipe, deletePersonSkill, getIngredients, deleteIngredient, getRecipeById, addIngredient}

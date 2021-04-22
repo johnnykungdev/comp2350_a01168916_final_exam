@@ -110,7 +110,7 @@ router.post('/deleteRecipe', (req, res) => {
 });
 
 router.get('/showIngredients', (req, res) => {
-	console.log("get review", req.query.id);
+	console.log("get ingredient", req.query.id);
 	const recipe_id = req.query.id
 	database.getConnection(function (err, dbConnection) {
 		if (err) {
@@ -197,6 +197,37 @@ router.post('/deleteIngredient', (req, res) => {
 			dbConnection.release();
 		}
 	});
+});
+
+router.post('/addIngredient', (req, res) => {
+	console.log("form submit");
+	console.log("add ingredient", req.body);
+	// database.getConnection(function (err, dbConnection) {
+	// 	if (err) {
+	// 		res.render('error', {message: 'Error connecting to MySQL'});
+	// 		console.log("Error connecting to mysql");
+	// 		console.log(err);
+	// 	}
+	// 	else {
+	// 		console.log(req.body); 
+	// 		dbModel.addIngredient(req.body, (err, result) => {
+	// 			if (err) {
+	// 				res.render('error', {message: 'Error writing to MySQL'});
+	// 				console.log("Error writing to mysql");
+	// 				console.log(err);
+	// 			}
+	// 			else { //success
+	// 				res.redirect("/");
+
+	// 				//Output the results of the query to the Heroku Logs
+	// 				console.log(result);
+	// 			}
+	// 		});
+			
+	// 		dbConnection.release();
+	// 	}
+	// });
+
 });
 
 module.exports = router;
