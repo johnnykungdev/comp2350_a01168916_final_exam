@@ -29,9 +29,7 @@
 							<% for(i=0; i < allRecipes.length; i++) { %>
 							<tr>
 								<td>
-									<a href=<%= `showReviews?id=${allRecipes[i].restaurant_id}` %>>
-										<%= allRecipes[i].name %>
-									</a>
+									<%= allRecipes[i].name %>
 								</td>
 								<td><%= allRecipes[i].description %></td>
 								<td><%= allRecipes[i].cook_time %></td>
