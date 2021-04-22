@@ -2,8 +2,8 @@ const database = include('/databaseConnection');
 
 const passwordPepper = "SeCretPeppa4MySal+";
 
-function getAllRestaurants(callback) {
-	let sqlQuery = "SELECT * FROM restaurant";
+function getRecipes(callback) {
+	let sqlQuery = "SELECT * FROM recipe";
 	database.query(sqlQuery, (err, results, fields) => {
 		if (err) {
 			callback(err, null);
@@ -14,11 +14,12 @@ function getAllRestaurants(callback) {
 	});
 }
 
-function addRestaurant(postData, callback) {
-	let sqlInsert = "INSERT INTO restaurant (name, description) VALUES (:name, :description);";
+function addRecipe(postData, callback) {
+	let sqlInsert = "INSERT INTO recipe (name, description, cook_time) VALUES (:name, :description, :cookTime);";
 	let params = {	
 			name: postData.name,
-			description: postData.description
+			description: postData.description,
+			cookTime: postData.cook_time
 		};
 	console.log(sqlInsert);
 	database.query(sqlInsert, params, (err, results, fields) => {
@@ -30,6 +31,22 @@ function addRestaurant(postData, callback) {
 			console.log(results);
 			callback(null, results);
 		}
+	});
+}
+
+function getRecipeById(recipe_id, callback) {
+	let sqlQuery = "SELECT name FROM recipe WHERE recipe_id = :recipeId;";
+	let params = {
+		recipeId: recipe_id
+	};
+
+	database.query(sqlQuery, params, (err, results, fields) => {
+		if (err) {
+			callback(err, null);
+		}
+		else {
+			callback(null, results);
+		}		
 	});
 }
 
@@ -50,11 +67,11 @@ function deletePersonSkill(personId, callback) {
 	});	
 }
  
-function deleteRestaurant(restaurant_id, callback) {
-	let sqlDeletePerson = "DELETE restaurant FROM restaurant JOIN review ON restaurant.restaurant_id = review.restaurant_id WHERE restaurant.restaurant_id = :restaurantId";
-	console.log("restaurant_id:", restaurant_id)
+function deleteRecipe(recipe_id, callback) {
+	let sqlDeletePerson = "DELETE recipe FROM recipe JOIN ingredient ON recipe.recipe_id = ingredient.recipe_id WHERE recipe.recipe_id = :recipeId";
+	console.log("recipe_id:", recipe_id)
 	let params = {
-		restaurantId: restaurant_id
+		recipeId: recipe_id
 	};
 	console.log(sqlDeletePerson);
 	database.query(sqlDeletePerson, params, (err, results, fields) => {
@@ -68,11 +85,13 @@ function deleteRestaurant(restaurant_id, callback) {
 	});	
 }
 
-function getReview(restaurantId, cb) {
-	let sqlRestaurant = "SELECT restaurant.restaurant_id, restaurant.name, review.review_id, review.details, review.reviewer_name, review.rating FROM restaurant LEFT JOIN review ON restaurant.restaurant_id = review.restaurant_id WHERE restaurant.restaurant_id = :restaurantId;"
+function getIngredients(recipe_id, cb) {
+	console.log(recipe_id)
+	let sqlRestaurant = "SELECT recipe.name AS 'recipe', ingredient_id, ingredient.name, ingredient.description, ingredient.quantity FROM ingredient JOIN recipe ON ingredient.recipe_id = recipe.recipe_id WHERE recipe.recipe_id = :recipeId;"
 	let params = {
-		restaurantId: restaurantId
+		recipeId: recipe_id
 	};
+	console.log("get ind")
 	database.query(sqlRestaurant, params, (err, results) => {
 		if (err) cb(err, null)
 		else {
@@ -90,6 +109,7 @@ function addReview(postData, callback) {
 			details: postData.details,
 			rating: postData.rating
 		};
+
 	console.log(sqlInsert);
 	database.query(sqlInsert, params, (err, results, fields) => {
 		if (err) {
@@ -103,10 +123,10 @@ function addReview(postData, callback) {
 	});
 }
 
-function deleteReview(reviewId, callback) {
-	let sqlDeleteReview = "DELETE FROM review where review_id = :reviewId";
+function deleteIngredient(ingredient_id, callback) {
+	let sqlDeleteReview = "DELETE FROM ingredient where ingredient_id = :ingredientId";
 	let params = {
-		reviewId: reviewId
+		ingredientId: ingredient_id
 	};
 	console.log(sqlDeleteReview);
 	database.query(sqlDeleteReview, params, (err, results, fields) => {
@@ -120,4 +140,4 @@ function deleteReview(reviewId, callback) {
 	});	
 }
 
-module.exports = {getAllRestaurants, addRestaurant, deleteRestaurant, deletePersonSkill, getReview, addReview, deleteReview}
+module.exports = {getRecipes, addRecipe, deleteRecipe, deletePersonSkill, getIngredients, addReview, deleteIngredient, getRecipeById}
