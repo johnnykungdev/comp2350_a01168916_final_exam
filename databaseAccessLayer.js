@@ -119,12 +119,12 @@ function deleteIngredient(ingredient_id, callback) {
 }
 
 function addIngredient(postData, callback) {
-	let sqlInsert = "INSERT INTO recipe (name, description, cook_time, recipe_id) VALUES (:name, :description, :cookTime, :recipeId);";
+	let sqlInsert = "INSERT INTO ingredient (name, description, quantity, recipe_id) VALUES (:name, :description, :quantity, :recipeId);";
 	let params = {	
 			recipeId: postData.recipe_id,
 			name: postData.name,
 			description: postData.description,
-			cookTime: postData.cook_time
+			quantity: postData.quantity
 		};
 	console.log(sqlInsert);
 	database.query(sqlInsert, params, (err, results, fields) => {

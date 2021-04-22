@@ -138,7 +138,7 @@ router.get('/showIngredients', (req, res) => {
 							console.log("recipie", recipe)
 							recipeName = recipe[0].name
 
-							res.render('ingredient', { allIngredients: result, recipe: recipeName });
+							res.render('ingredient', { allIngredients: result, recipe: recipeName, recipe_id: recipe_id });
 						}
 					})
 					//Output the results of the query to the Heroku Logs
@@ -202,31 +202,35 @@ router.post('/deleteIngredient', (req, res) => {
 router.post('/addIngredient', (req, res) => {
 	console.log("form submit");
 	console.log("add ingredient", req.body);
-	// database.getConnection(function (err, dbConnection) {
-	// 	if (err) {
-	// 		res.render('error', {message: 'Error connecting to MySQL'});
-	// 		console.log("Error connecting to mysql");
-	// 		console.log(err);
-	// 	}
-	// 	else {
-	// 		console.log(req.body); 
-	// 		dbModel.addIngredient(req.body, (err, result) => {
-	// 			if (err) {
-	// 				res.render('error', {message: 'Error writing to MySQL'});
-	// 				console.log("Error writing to mysql");
-	// 				console.log(err);
-	// 			}
-	// 			else { //success
-	// 				res.redirect("/");
 
-	// 				//Output the results of the query to the Heroku Logs
-	// 				console.log(result);
-	// 			}
-	// 		});
+	database.getConnection(function (err, dbConnection) {
+		if (err) {
+			res.render('error', {message: 'Error connecting to MySQL'});
+			console.log("Error connecting to mysql");
+			console.log(err);
+		}
+		else {
+			const postData = {
+				...req.body,
+				recipe_id: Number(req.body.recipe_id)
+			}
+			dbModel.addIngredient(postData, (err, result) => {
+				if (err) {
+					res.render('error', {message: 'Error writing to MySQL'});
+					console.log("Error writing to mysql");
+					console.log(err);
+				}
+				else { //success
+					res.redirect("/");
+
+					//Output the results of the query to the Heroku Logs
+					console.log(result);
+				}
+			});
 			
-	// 		dbConnection.release();
-	// 	}
-	// });
+			dbConnection.release();
+		}
+	});
 
 });
 

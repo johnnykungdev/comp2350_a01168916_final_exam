@@ -46,7 +46,8 @@
 						</div>
 					<% } %>
 
-					<form action="review" method="post">
+					<form action="addIngredient" method="post">
+						<input name="recipe_id" value=<%- locals.recipe_id%> type="text" hidden>
 						<div class="field is-horizontal">
 						  <div class="field-label is-normal">
 							<label class="label">Add New Review</label>
@@ -54,17 +55,17 @@
 						  <div class="field-body">
 							<div class="field">
 							  <p class="control is-expanded">
-								<input name="reviewer_name" class="input" type="text" placeholder="Your Name">
+								<input name="name" class="input" type="text" placeholder="Name">
 							  </p>
 							</div>
 							<div class="field">
 							  <p class="control is-expanded">
-								<input name="details" class="input" type="text" placeholder="Review">
+								<input name="description" class="input" type="text" placeholder="Description">
 							  </p>
 							</div>
                             <div class="field">
                                 <p class="control is-expanded">
-                                  <input name="rating" class="input" type="text" placeholder="Rating 0-5">
+                                  <input name="quantity" class="input" type="text" placeholder="quantity">
                                 </p>
                               </div>							
 							<div class="field">
