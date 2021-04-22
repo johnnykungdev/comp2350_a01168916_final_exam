@@ -3,7 +3,7 @@ const database = include('/databaseConnection');
 const passwordPepper = "SeCretPeppa4MySal+";
 
 function getRecipes(callback) {
-	let sqlQuery = "SELECT * FROM recipe";
+	let sqlQuery = "SELECT recipe.name, recipe.description, recipe.cook_time, COUNT(ingredient.recipe_id) AS 'ingredient_num' FROM ingredient RIGHT JOIN recipe ON ingredient.recipe_id = recipe.recipe_id GROUP BY recipe.recipe_id;";
 	database.query(sqlQuery, (err, results, fields) => {
 		if (err) {
 			callback(err, null);

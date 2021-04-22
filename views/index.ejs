@@ -35,7 +35,7 @@
 								</td>
 								<td><%= allRecipes[i].description %></td>
 								<td><%= allRecipes[i].cook_time %></td>
-								<td>nums</td>
+								<td><%= allRecipes[i].ingredient_num %></td>
 								<td>
 									<form action="deleteRecipe" method="POST">
 										<input hidden name="recipe_id" value=<%- allRecipes[i].recipe_id %> >
